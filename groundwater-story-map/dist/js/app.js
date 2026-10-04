@@ -1232,11 +1232,6 @@ function updateDashboardMode() {
     btn.classList.toggle('is-active', btn.dataset.mode === state.mapMode);
   });
 
-  if (state.activeView === 'dashboard') {
-    const modePath = state.mapMode === 'density' ? '' : `/${state.mapMode}`;
-    window.history.replaceState(null, '', `#dashboard${modePath}`);
-  }
-
   updateDashboardFilters();
   state.dashboardMap.resize();
   state.dashboardMap.triggerRepaint();
@@ -1488,7 +1483,6 @@ function switchView(view) {
     dashboardView.style.display = 'none';
     navStory.classList.add('is-active');
     navDashboard.classList.remove('is-active');
-    window.history.replaceState(null, '', '#story');
     if (!state.animationMap) initAnimationMap();
     else window.requestAnimationFrame(() => state.animationMap.resize());
     startAnimationTimer();
@@ -1497,8 +1491,6 @@ function switchView(view) {
     dashboardView.style.display = 'block';
     navStory.classList.remove('is-active');
     navDashboard.classList.add('is-active');
-    const modePath = state.mapMode === 'density' ? '' : `/${state.mapMode}`;
-    window.history.replaceState(null, '', `#dashboard${modePath}`);
     stopAnimationTimer();
 
     if (!state.dashboardMap) {
@@ -1550,32 +1542,14 @@ function initApp() {
   navStory.addEventListener('click', () => switchView('story'));
   navDashboard.addEventListener('click', () => switchView('dashboard'));
 
-  // Handle the initial route. A missing hash opens the story, matching the
-  // original application; dashboard sub-routes restore their analysis mode.
-  const hash = window.location.hash;
-  const dashboardMode = hash.match(/^#dashboard\/(.+)$/)?.[1];
-  const validModes = ['density', 'hexDensity', 'hexDepth', 'monitoringGap', 'points', 'depth', 'coverage', 'timeline', 'wells3d'];
-  if (validModes.includes(dashboardMode)) state.mapMode = dashboardMode;
-  if (hash.startsWith('#dashboard')) {
-    switchView('dashboard');
-  } else {
-    switchView('story');
+  // Keep one clean URL while the story and dashboard switch in place.
+  if (window.location.hash) {
+    window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
   }
+  switchView('story');
 
   renderStoryContent();
   renderMapStoryChapters();
-
-  // Handle hash changes
-  window.addEventListener('hashchange', () => {
-    const hash = window.location.hash;
-    if (hash.startsWith('#dashboard')) {
-      const requestedMode = hash.match(/^#dashboard\/(.+)$/)?.[1];
-      if (validModes.includes(requestedMode)) state.mapMode = requestedMode;
-      switchView('dashboard');
-    } else {
-      switchView('story');
-    }
-  });
 }
 
 // Render Map Story Chapters

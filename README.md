@@ -363,8 +363,7 @@ Ground Water Analysis/
 ├── gadm36_KEN_1.*
 ├── gw_*.html
 └── groundwater-story-map/
-    ├── index.html                 # Redirects to the current static application
-    ├── index-vanilla.html         # Main story and dashboard document
+    ├── index.html                 # Main story and dashboard document
     ├── icons8-favicon-100.png
     ├── css/
     │   └── styles.css             # Complete application stylesheet
@@ -417,7 +416,7 @@ cd groundwater-story-map
 python -m http.server 8000
 ```
 
-Open `http://localhost:8000/` in a browser. The root page preserves query parameters and dashboard hash routes when it opens `index-vanilla.html`.
+Open `http://localhost:8000/` in a browser. Story and dashboard navigation stays on this single root URL.
 
 For deployment, publish the contents of `groundwater-story-map/` to any static web host. Keep the existing directory structure so the local JavaScript, CSS, MapLibre files, data and images resolve correctly.
 
