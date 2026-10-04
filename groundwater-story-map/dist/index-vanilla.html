@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Kenya Groundwater Lens, a story and analytics dashboard for 21,284 recorded groundwater sources across 40 Kenyan counties." />
+    <link rel="icon" type="image/png" href="icons8-favicon-100.png" />
+    <title>Kenya Groundwater Lens</title>
+    <link href="vendor/maplibre-gl/maplibre-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="vendor/maplibre-gl/maplibre-gl.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <header class="app-header">
+        <button class="brand" id="brand-button" aria-label="Open Kenya Groundwater Lens story">
+          <img class="brand-mark" src="icons8-favicon-100.png" alt="" aria-hidden="true" />
+          <span>Kenya Groundwater Lens</span>
+        </button>
+        <nav class="primary-nav" aria-label="Main sections">
+          <button id="nav-story" class="is-active">
+            <span>Part A</span> Water story
+          </button>
+          <button id="nav-dashboard">
+            <span>Part B</span> Dashboard
+          </button>
+        </nav>
+      </header>
+
+      <div id="story-view" class="app-content">
+        <div class="story-page">
+          <section class="animation-stage" aria-label="Animated groundwater overview">
+            <div id="story-animation">
+              <div id="animation-map" aria-label="Animated map of recorded groundwater sources in Kenya"></div>
+              <div class="map-wash" aria-hidden="true"></div>
+              <aside class="scene-rail" aria-label="Story scenes" id="scene-rail"></aside>
+              <section class="narrative" aria-live="polite" id="narrative"></section>
+              <footer class="story-footer" aria-label="Story playback and navigation" id="story-footer"></footer>
+              <div class="legend" aria-label="Map legend" id="animation-legend"></div>
+              <div class="map-note">OpenFreeMap © OpenMapTiles · Data from OpenStreetMap · WebGL map by MapLibre</div>
+            </div>
+          </section>
+
+          <section class="story-body" id="water-story">
+            <div class="story-intro">
+              <p class="section-label">THE LEAD · THE MIRAGE OF THE MAP</p>
+              <h2>Mapping Kenya's groundwater: what 21,284 records reveal and hide</h2>
+              <p>Kenya has a valuable public list of recorded wells, boreholes and springs. It helps us see where information exists and where follow-up work can begin. But there is a catch: this is a map of survey records, not a full count of every groundwater source in the country.</p>
+              <p>The dashboard is therefore a national screening tool. It gives us clues, shows strong and weak parts of the inventory, and helps plan field checks. It should not be treated as the final answer.</p>
+            </div>
+
+            <div class="finding-grid" id="finding-grid"></div>
+
+            <section class="story-split story-caveat">
+              <div>
+                <p class="section-label">WHY IT MATTERS · A TOOL, NOT A CENSUS</p>
+                <h2>The map can show where records are strong. It cannot show where all groundwater exists.</h2>
+                <p>A bright place on the map may have been surveyed more often. A quiet place may simply have fewer records. A missing depth is an information gap, not proof that a source is shallow, inactive or outside the law.</p>
+                <p>This is why the dashboard separates what the data says from what still needs to be checked.</p>
+              </div>
+              <ul class="reading-rules">
+                <li><b>Bright cluster</b><span>More records in this inventory. This does not automatically mean more groundwater.</span></li>
+                <li><b>Blank or quiet area</b><span>Less nearby information. This is not proof that groundwater is absent.</span></li>
+                <li><b>Depth line or column</b><span>Recorded construction depth, not the water table or available water.</span></li>
+                <li><b>Map point</b><span>A lead to check, not proof of a permit, owner, offence or bill.</span></li>
+              </ul>
+            </section>
+
+            <section class="map-story" id="map-analysis-story" aria-labelledby="map-story-title">
+              <header class="map-story-intro">
+                <p class="section-label">EXPLORE THE ANALYSIS · NINE MAPS, ONE STORY</p>
+                <h2 id="map-story-title">Scroll through every notebook analysis output map and read what the pattern really means.</h2>
+                <p>The dashboard views answer different questions. As you move through this section, the map changes while the explanation stays focused on what the data can and cannot support.</p>
+              </header>
+
+              <div class="map-story-layout">
+                <figure class="map-story-stage" aria-live="polite" id="map-story-stage"></figure>
+                <div class="map-story-chapters" id="map-story-chapters"></div>
+              </div>
+            </section>
+
+            <section class="story-split">
+              <div>
+                <p class="section-label">THE SOLUTION · THE WRA OPPORTUNITY</p>
+                <h2>The map shows where to look. Verification turns a point into useful evidence.</h2>
+                <p>The gaps do not make the map useless. They show where WRA, counties, researchers and private operators can work together. Each point can begin a simple process that links the public inventory to official records and real conditions on the ground.</p>
+                <button class="story-cta" id="story-cta">Explore the dashboard →</button>
+              </div>
+              <ol class="verification-list">
+                <li><span>01</span><div><b>Identify the source</b><p>Use the public point to locate a possible well, borehole or spring.</p></div></li>
+                <li><span>02</span><div><b>Match official records</b><p>Compare the point with WRA permits, applications and completion records.</p></div></li>
+                <li><span>03</span><div><b>Visit the site</b><p>Confirm its location, condition, operator, use and the people who depend on it.</p></div></li>
+                <li><span>04</span><div><b>Measure water use</b><p>Link chargeable abstraction to a reliable meter and verified readings.</p></div></li>
+                <li><span>05</span><div><b>Manage fairly</b><p>Use checked evidence for planning, permits, lawful charges and a clear correction process.</p></div></li>
+              </ol>
+            </section>
+
+            <section class="story-conclusion">
+              <p class="section-label">THE TAKEAWAY</p>
+              <h2>Digital maps give us the clues. Fair water management is won on the ground.</h2>
+              <p>Good decisions need both parts: a dashboard that helps people see patterns, and fieldwork that confirms what each record means. The inventory is the starting line. Better records, site visits and measured use are what turn it into responsible groundwater management.</p>
+            </section>
+
+            <footer class="story-source">
+              <b>Data acknowledgement</b>
+              <p>Groundwater-source records: mWater dataset published through UNESCO IHP-WINS, February 2025 snapshot. Map background: OpenFreeMap, OpenMapTiles and OpenStreetMap contributors.</p>
+            </footer>
+          </section>
+        </div>
+      </div>
+
+      <div id="dashboard-view" class="app-content" style="display: none;">
+        <div class="dashboard-shell">
+          <aside class="dashboard-sidebar">
+            <section class="panel filter-panel">
+              <div class="panel-heading">
+                <div><span>Controls</span><h2>Filters</h2></div>
+                <button id="reset-filters">Reset</button>
+              </div>
+              <label class="field-label" for="county-filter">County</label>
+              <select id="county-filter">
+                <option value="All counties">All counties</option>
+              </select>
+              <div class="field-label">Source type</div>
+              <div class="checkbox-list" id="type-filters"></div>
+              <label class="depth-toggle">
+                <input type="checkbox" id="depth-only" />
+                <span>Only records with depth</span>
+              </label>
+            </section>
+
+            <section class="panel screening-panel">
+              <div class="panel-heading">
+                <div><span>Notebook outputs</span><h2>Analysis view</h2></div>
+              </div>
+              <div class="analysis-view-list" id="analysis-views"></div>
+              <p class="panel-note"><b>Interpretation rule:</b> high record density means stronger inventory coverage. It does not by itself mean more groundwater is available.</p>
+            </section>
+          </aside>
+
+          <section class="dashboard-map-panel">
+            <div class="map-title">
+              <div><b id="map-title-text">Record-density map</b><span id="map-subtitle">All counties · 21,284 visible records · Brighter areas contain more records; this is survey concentration, not groundwater abundance.</span></div>
+            </div>
+            <div class="well-scale-control" id="well-scale-control" style="display: none;">
+              <span>Analytical vertical scale</span>
+              <button data-scale="30">30×</button>
+              <button data-scale="150" class="is-active">150×</button>
+              <button data-scale="300">300×</button>
+            </div>
+            <div class="timeline-control" id="timeline-control" style="display: none;">
+              <div>
+                <button id="timeline-cumulative" class="is-active">Cumulative</button>
+                <button id="timeline-month">One month</button>
+              </div>
+              <label>
+                <b id="timeline-label">Select month</b>
+                <input type="range" id="timeline-slider" min="0" max="100" value="100" />
+              </label>
+            </div>
+            <div class="dashboard-map" id="dashboard-map">
+              <div class="dashboard-fullscreen-legend" id="dashboard-fullscreen-legend" aria-label="Fullscreen map legend"></div>
+            </div>
+            <div class="dashboard-legend" id="dashboard-legend"></div>
+          </section>
+
+          <aside class="dashboard-analytics" id="dashboard-analytics">
+            <section class="panel overview-panel">
+              <div class="panel-heading">
+                <div><span>Visible selection</span><h2>Inventory overview</h2></div>
+                <div class="panel-heading-actions">
+                  <b id="overview-county">ALL</b>
+                  <button class="analytics-expand-button" id="expand-analytics" type="button" aria-expanded="false" aria-label="Expand statistics panel over the map" title="Expand statistics panel">
+                    <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5" /><path d="M8 10.5h5M10.5 8v5" /></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="overview-kpis">
+                <div><strong id="kpi-records">0</strong><span>records</span></div>
+                <div><strong id="kpi-counties">0</strong><span>counties</span></div>
+                <div><strong id="kpi-depth">0</strong><span>with depth</span></div>
+              </div>
+              <div class="bar-list" id="type-bar-list"></div>
+            </section>
+            <section class="panel county-panel">
+              <div class="panel-heading">
+                <div><span>Record concentration</span><h2>Top counties</h2></div>
+              </div>
+              <div class="bar-list" id="county-bar-list"></div>
+            </section>
+          </aside>
+
+          <section class="dashboard-bottom" id="dashboard-bottom">
+            <article class="panel depth-panel">
+              <div class="panel-heading">
+                <div><span id="depth-count">0 usable values</span><h2>Construction-depth distribution</h2></div>
+                <button class="analytics-expand-button" id="expand-depth" type="button" aria-expanded="false" aria-label="Expand construction-depth chart over the map" title="Expand chart">
+                  <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5" /><path d="M8 10.5h5M10.5 8v5" /></svg>
+                </button>
+              </div>
+              <div class="histogram" id="depth-histogram"></div>
+            </article>
+            <article class="panel update-panel">
+              <div class="panel-heading">
+                <div><span>2013–2025</span><h2>Record-update years</h2></div>
+                <button class="analytics-expand-button" id="expand-updates" type="button" aria-expanded="false" aria-label="Expand record-update chart over the map" title="Expand chart">
+                  <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5" /><path d="M8 10.5h5M10.5 8v5" /></svg>
+                </button>
+              </div>
+              <div class="update-chart" id="update-chart"></div>
+              <p class="chart-note">These are last-update years, not drilling or construction years.</p>
+            </article>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
