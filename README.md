@@ -12,7 +12,7 @@ This document has three parts:
 
 1. **The groundwater story** — what the findings mean for a general reader.
 2. **The analysis workflow** — how the notebook and scripts turn the source data into the map outputs.
-3. **The application** — how the React and MapLibre dashboard is built and run.
+3. **The application** — how the static HTML, CSS, JavaScript and MapLibre dashboard is organised and run.
 
 ---
 
@@ -64,7 +64,7 @@ The dashboard must be read with four simple rules:
 - A **depth line or column** shows recorded construction depth, not the water table.
 - A **map point** is a lead to check, not proof of an owner, permit, offence or unpaid bill.
 
-The monitoring-gap view shows how far each national grid cell is from the nearest inventory record. It is useful for planning more data collection. It does not map dry land or groundwater scarcity.
+The groundwater record coverage gap view shows how far each national grid cell is from the nearest mapped record. It is useful for planning more data collection. It does not map dry land or groundwater scarcity.
 
 ### The WRA opportunity: from map to management
 
@@ -123,9 +123,9 @@ The README uses relative image links. This allows the same images to appear when
 - **What it shows:** the median recorded construction depth in grid cells that have at least five usable depth values. Grey cells do not meet that minimum.
 - **What it means:** it supports cautious comparison between well-construction records. It does not show the water table or the amount of water available underground.
 
-#### 4. 3D inventory monitoring gaps
+#### 4. 3D groundwater record coverage gaps
 
-![Current 3D inventory-monitoring-gap view](groundwater-story-map/docs/images/monitoring-gaps-3d.png)
+![Current 3D groundwater record coverage gap view](groundwater-story-map/docs/images/monitoring-gaps-3d.png)
 
 - **What it shows:** the distance from each national grid cell to the nearest point in this public inventory.
 - **What it means:** taller cells identify places where the inventory gives less nearby information and where more checking may be useful. They do not prove that groundwater is absent.
@@ -248,9 +248,9 @@ H3 divides the country into equal-style hexagonal cells at resolution 5. The not
 
 1. **Inventory density:** count the records inside each cell.
 2. **Median construction depth:** calculate a median only when a cell has at least five usable depth values.
-3. **Inventory monitoring gap:** measure the straight-line distance from each cell centre to the nearest inventory record.
+3. **Groundwater record coverage gap:** measure the straight-line distance from each cell centre to the nearest mapped record.
 
-The density surface uses a square-root display scale so the very large western counts do not hide smaller patterns elsewhere. The monitoring-gap search uses a fast nearest-point tree. These display choices change how the map is drawn; they do not change the source values shown in popups.
+The density surface uses a square-root display scale so the very large western counts do not hide smaller patterns elsewhere. The record coverage gap search uses a fast nearest-point tree. These display choices change how the map is drawn; they do not change the source values shown in popups.
 
 ### Step 5 — Build the terrain and time views
 
@@ -266,7 +266,7 @@ The notebook produces these detailed HTML files:
 | ------------------------------------- | ----------------------------------------- | ----------------------------------- |
 | `gw_hex_density_3d.html`            | H3 record counts                          | 3D inventory density                |
 | `gw_hex_depth_3d.html`              | H3 median construction depth              | 3D median construction depth        |
-| `gw_monitoring_gap_3d.html`         | Distance to the nearest record            | 3D inventory monitoring gaps        |
+| `gw_monitoring_gap_3d.html`         | Distance to the nearest record            | 3D groundwater record coverage gaps |
 | `gw_terrain_wells_entire_area.html` | National terrain and downward well lines  | Wells below ground                  |
 | `gw_time_filter_lonboard.html`      | Month-based update filter                 | Record-update timeline              |
 | `gw_cross_section.html`             | West-to-east profile of well construction | Notebook reference only             |
@@ -277,14 +277,14 @@ The large notebook HTML files remain useful for detailed review. The web app reb
 
 ### Step 7 — Prepare small browser files
 
-Run:
+Run the two preparation scripts from the workspace root:
 
 ```powershell
-cd groundwater-story-map
-npm run prepare:data
+python groundwater-story-map/scripts/prepare_story_data.py
+python groundwater-story-map/scripts/prepare_notebook_surfaces.py
 ```
 
-This command runs two scripts:
+The scripts perform these tasks:
 
 1. `scripts/prepare_story_data.py`
 
@@ -319,7 +319,7 @@ The main Python packages are pandas, GeoPandas, NumPy, SciPy, H3, PyDeck, Plotly
 - A depth hexagon needs at least five measurements.
 - Missing depth stays missing; it is not changed to zero.
 - Update dates are labelled as metadata dates, not drilling dates.
-- Monitoring gaps are labelled as inventory gaps, not groundwater gaps.
+- Record coverage gaps are labelled as data gaps, not groundwater scarcity.
 - Every national count used by the app comes from the prepared summary.
 
 ---
@@ -343,13 +343,14 @@ The five story scenes follow this order:
 
 ### Technology
 
-- **Node.js and Vite** run and build the web project.
-- **React** manages navigation, filters, story scenes, charts and panel state.
-- **MapLibre GL JS** draws the 2D maps, 3D H3 columns, terrain, popups and fullscreen view.
-- **Custom WebGL code** draws well shafts below the terrain surface.
-- **Python** prepares the small files used by the browser.
+- **HTML5** provides the story and dashboard structure.
+- **CSS3** provides the responsive layouts, map controls, panels, charts and story presentation.
+- **Vanilla JavaScript** manages navigation, filters, story scenes, charts, map state and accessibility behaviour.
+- **MapLibre GL JS 5.12** draws the 2D maps, 3D H3 columns, terrain, popups and fullscreen view. Its browser files are stored locally in `vendor/maplibre-gl/`.
+- **Custom WebGL code** inside `js/app.js` draws well shafts below the terrain surface.
+- **Python** prepares the compact JSON and GeoJSON files used by the browser.
 
-No commercial basemap API key is required.
+The application is a static website. It has no Node.js runtime, React framework, Vite build step, package installation or commercial basemap API key.
 
 ### Project structure
 
@@ -362,28 +363,19 @@ Ground Water Analysis/
 ├── gadm36_KEN_1.*
 ├── gw_*.html
 └── groundwater-story-map/
-    ├── index.html
-    ├── package.json
+    ├── index.html                 # Redirects to the current static application
+    ├── index-vanilla.html         # Main story and dashboard document
+    ├── icons8-favicon-100.png
     ├── css/
-    │   ├── animation.css
-    │   └── dashboard.css
+    │   └── styles.css             # Complete application stylesheet
+    ├── js/
+    │   └── app.js                 # Story, dashboard, MapLibre and WebGL logic
     ├── scripts/
     │   ├── prepare_story_data.py
     │   └── prepare_notebook_surfaces.py
-    ├── src/
-    │   ├── App.jsx
-    │   ├── main.jsx
-    │   ├── components/
-    │   │   ├── AppHeader.jsx
-    │   │   ├── GroundwaterAnimation.jsx
-    │   │   ├── GroundwaterDashboard.jsx
-    │   │   ├── MapAnalysisStory.jsx
-    │   │   └── StoryPage.jsx
-    │   └── lib/
-    │       ├── maplibre.js
-    │       └── wellsBelowGroundLayer.js
-    ├── public/data/
-    └── docs/images/
+    ├── public/data/               # Prepared browser datasets
+    ├── docs/images/               # Story and analysis screenshots
+    └── vendor/maplibre-gl/        # Local MapLibre browser distribution
 ```
 
 ### How the dashboard works
@@ -404,7 +396,9 @@ Left and right panels add vertical scrollbars only when their content is taller 
 
 ### Map controls
 
-The map provides:
+In normal view, the Analysis View list in the left panel selects the active notebook output and the map key appears below the map. In fullscreen view, a separate Notebook Outputs selector and a separate map key appear inside MapLibre. The current map title and description stay synchronised between the two layouts.
+
+The map also provides:
 
 - zoom in and zoom out;
 - fullscreen mode;
@@ -412,36 +406,20 @@ The map provides:
 - pitch and rotation for 3D views;
 - clickable point and H3 popups;
 - a north-reset control; and
-- a legend that changes with the selected analysis.
+- a map key that changes with each of the nine analysis views.
 
 ### Run the application
 
-Install packages once:
+No installation or build command is required. Start a local static server from the application directory:
 
 ```powershell
 cd groundwater-story-map
-npm install
+python -m http.server 8000
 ```
 
-Start the development server:
+Open `http://localhost:8000/` in a browser. The root page preserves query parameters and dashboard hash routes when it opens `index-vanilla.html`.
 
-```powershell
-npm run dev
-```
-
-Build the production site:
-
-```powershell
-npm run build
-```
-
-Preview the production build:
-
-```powershell
-npm run preview
-```
-
-The deployable files are written to `groundwater-story-map/dist/`.
+For deployment, publish the contents of `groundwater-story-map/` to any static web host. Keep the existing directory structure so the local JavaScript, CSS, MapLibre files, data and images resolve correctly.
 
 ### Important application limits
 

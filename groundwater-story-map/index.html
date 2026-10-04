@@ -3,12 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Kenya Groundwater Lens — story and analytics dashboard for 21,284 recorded groundwater sources across 40 Kenyan counties." />
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="description" content="Kenya Groundwater Lens, a story and analytics dashboard for 21,284 recorded groundwater sources across 40 Kenyan counties." />
+    <link rel="icon" type="image/png" href="icons8-favicon-100.png" />
     <title>Kenya Groundwater Lens</title>
+    <script>
+      const target = `index-vanilla.html${window.location.search}${window.location.hash}`;
+      window.location.replace(target);
+    </script>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <p><a href="index-vanilla.html">Open Kenya Groundwater Lens</a></p>
   </body>
 </html>
