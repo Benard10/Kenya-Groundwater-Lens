@@ -1,2 +1,4 @@
 *.log
 *-preview.png
+*-qa.png
+qa-*.html

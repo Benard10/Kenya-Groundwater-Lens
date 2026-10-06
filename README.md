@@ -1,12 +1,12 @@
 # Kenya Groundwater Lens
 
-Kenya Groundwater Lens turns a public list of wells, boreholes and springs into a clear water story, a set of notebook analyses and an interactive web dashboard.
+Kenya Groundwater Lens turns **21,284 mapped records** of wells, boreholes and springs into a clear water story, a set of notebook analyses and an interactive web dashboard.
 
 The project has one main message:
 
-> The inventory is a useful national screening tool, but it is not a complete census of Kenya's groundwater sources.
+> The mapped inventory is a useful national screening tool, but it is not a complete census of Kenya's groundwater sources.
 
-The map helps people find patterns and decide where to look next. It cannot, by itself, prove how much groundwater exists, who owns a source, whether it has a permit or whether money is owed.
+The map helps people find patterns and decide where to look next. That matters because a borehole may be on private land while the groundwater resource is shared and legally held in trust for the public. The map cannot, by itself, prove how much groundwater exists, who owns a source, whether it has a permit or whether money is owed.
 
 This document has three parts:
 
@@ -18,9 +18,9 @@ This document has three parts:
 
 ## Part 1 — The groundwater story
 
-### The lead: what 21,284 records reveal—and hide
+### The lead: what 21,284 mapped records reveal—and hide
 
-The cleaned inventory contains **21,284 recorded groundwater sources across 40 counties**. It brings many wells, boreholes and springs into one public view. That makes it a strong starting point for national screening and field planning.
+The cleaned inventory contains **21,284 mapped water-source records across 40 counties**. It brings many wells, boreholes and springs into one public view. That makes it a strong starting point for national screening and field planning.
 
 The important catch is that the map shows **where records were collected**. It does not show every groundwater source in Kenya. A bright area may have been surveyed more often. A quiet area may simply have fewer records.
 
@@ -28,22 +28,44 @@ The inventory should therefore be used as a starting line for checking, not as a
 
 ![Kenya's water story](groundwater-story-map/docs/images/water-story.png)
 
+The animated opening now frames the map as a set of questions: where records are concentrated, which values need checking, where evidence is thin and how a mapped dot can become a confirmed record.
+
+### The written story: from map pattern to evidence
+
+![Redesigned written-story opening](groundwater-story-map/docs/images/story-opening.png)
+
+The written story begins with the central reading rule and a compact data snapshot before explaining clusters, gaps, depth values, WRA's role and the shared checking process.
+
+### Why borehole records matter
+
+Groundwater does not stop at a property boundary. A borehole can draw from an aquifer shared with neighbouring users and connected environments. Kenya's Water Act therefore vests water resources in the national government in trust for the people, and WRA regulates their management and use.
+
+The story presents the general path in three parts:
+
+1. **Before construction:** apply to WRA and obtain the required approval or authorisation before constructing abstraction works.
+2. **Before abstraction:** complete the required records and checks; authorisation to construct does not by itself permit water abstraction.
+3. **While using water:** follow permit conditions, measure and report use where required, and pay the applicable permit fees and water-use charges.
+
+Requirements and charges depend on the use category and current regulations. Users should confirm their particular case through [WRA's permitting guidance](https://wra.go.ke/water-use-allocation/) and the [Water (Resources) Regulations, 2025](https://new.kenyalaw.org/akn/ke/act/ln/2025/58/eng@2025-03-07/source). The dashboard is not WRA's permit or billing database and cannot establish compliance from a mapped point.
+
+![Shared groundwater and the general WRA permitting path](groundwater-story-map/docs/images/shared-water-permits.png)
+
 ### The data breakdown: what is in the inventory
 
-| Finding                      |              Result | Simple meaning                                                       |
-| ---------------------------- | ------------------: | -------------------------------------------------------------------- |
-| Total records                |    **21,284** | Publicly recorded wells, boreholes and springs used in this analysis |
-| Counties represented         |        **40** | Seven counties have no record in this dataset                        |
-| Kakamega records             |    **12,722** | The largest recorded county group                                    |
-| Vihiga records               |     **2,779** | The second-largest recorded county group                             |
-| Kakamega and Vihiga combined |     **72.8%** | Nearly three quarters of the full inventory are in two counties      |
-| Well and borehole records    |    **13,645** | Boreholes, protected dug wells and unprotected dug wells             |
-| Usable construction depths   |       **552** | Only **2.6%** of all records can support depth comparisons     |
-| Median construction depth    | **75 metres** | The middle value among the 552 usable depth records                  |
+| Finding                          | Result        | Simple meaning                                                     |
+| -------------------------------- | ------------: | ------------------------------------------------------------------ |
+| Total mapped records             | **21,284**    | Public-dataset entries with locations that can be shown on the map |
+| Counties represented             | **40**        | Seven counties have no mapped record in this dataset               |
+| Kakamega mapped records          | **12,722**    | The largest mapped county group                                    |
+| Vihiga mapped records            | **2,779**     | The second-largest mapped county group                             |
+| Kakamega and Vihiga combined     | **72.8%**     | Nearly three quarters of the mapped inventory are in two counties  |
+| Mapped well and borehole records | **13,645**    | The other **7,639** mapped records are springs                     |
+| Usable construction depths       | **552**       | Only **2.6%** of all records can support depth comparisons         |
+| Median construction depth        | **75 metres** | The middle value among the 552 usable depth records                |
 
 #### The illusion of abundance
 
-Kakamega and Vihiga contain **15,501 records**, or **72.8%** of the full inventory.
+Kakamega and Vihiga contain **15,501 mapped records**, or **72.8%** of the mapped inventory.
 
 This does not mean that these two counties contain 72.8% of Kenya's groundwater. It means that this public inventory has much stronger coverage there. The record-density and 3D density maps make this survey pattern easy to see.
 
@@ -59,7 +81,7 @@ The 3D depth map requires at least five usable depth records in a grid cell befo
 
 The dashboard must be read with four simple rules:
 
-- A **bright cluster** means more records in this inventory, not automatically more groundwater.
+- A **bright cluster** means more mapped records in this inventory, not automatically more groundwater.
 - A **blank or quiet area** means less nearby information, not proof that groundwater is absent.
 - A **depth line or column** shows recorded construction depth, not the water table.
 - A **map point** is a lead to check, not proof of an owner, permit, offence or unpaid bill.
@@ -70,21 +92,13 @@ The groundwater record coverage gap view shows how far each national grid cell i
 
 The gaps do not make the map useless. They show where the Water Resources Authority (WRA), counties, researchers, communities and private operators can work together.
 
-The project proposes a five-step path.
+The project proposes one shared five-step checking process:
 
-#### Phase 1 — Identification and matching
-
-1. **Identify the source.** Use the public point to locate a possible well, borehole or spring.
-2. **Match official records.** Compare the point with WRA applications, permits, completion records and the permit database.
-
-#### Phase 2 — Ground checking
-
-3. **Visit the site.** Confirm the coordinates, source type, operating condition, operator, use and the people who depend on it.
-
-#### Phase 3 — Accountability
-
-4. **Measure water use.** Where metering is required, connect the verified permit to a reliable meter and checked readings.
-5. **Manage fairly.** Use verified evidence for planning, permits and lawful charges, and give affected users a clear way to correct errors.
+1. **Spot it.** Pick a dot or pattern that needs a closer look.
+2. **Find the record.** Look for the source in WRA's records and trace the original survey entry.
+3. **Compare the papers.** Match it with available permits, applications, borehole logs and completion records.
+4. **Visit the site.** Confirm the source, its condition, who uses it and any details that need checking.
+5. **Confirm or correct.** Keep a supported record, correct it where needed and note what remains uncertain.
 
 WRA says its permit process includes an application, approval to build abstraction works, site checks, completion records and permit issue. It also says categories B, C and D are linked to economic water use and payment for the amount used. This project does not replace that process.
 
@@ -94,26 +108,30 @@ The map cannot produce a bill because the public data does not confirm the permi
 
 Digital maps make large patterns easier to see. They help people ask better questions and plan where to work. Fair groundwater management, however, depends on official records, visits to real sites and reliable measurements.
 
+The practical question is: **where should WRA and its partners verify first?** The dashboard supports that decision by showing where mapped records are concentrated, where information is thin and which values deserve a closer look.
+
 **The inventory is the starting line. Fieldwork is what turns it into trusted evidence.**
 
 ### Screenshot guide: what each dashboard view means
 
-The screenshots below come from `groundwater-story-map/docs/images/`. They show the current, corrected dashboard layers. Each view displays only the layer needed for that analysis, so a heatmap is not covered by a second point layer and a 3D surface is not mixed with another result.
+The screenshots below come from `groundwater-story-map/docs/images/`. All nine were recaptured from the current interface after the layout, wording and control changes. Each view displays only the layer needed for that analysis, so a heatmap is not covered by a second point layer and a 3D surface is not mixed with another result.
+
+The dashboard no longer uses hover-only question-mark identifiers. Control guidance now appears permanently in the written story under **Explore the analysis · Nine views, three questions**, while the right-hand dashboard panel explains the active view without covering the map.
 
 The README uses relative image links. This allows the same images to appear when the project is opened locally or viewed from a repository, without depending on the original `F:` drive location.
 
-#### 1. Record density
+#### 1. Mapped-record density
 
 ![Current 2D record-density heatmap](groundwater-story-map/docs/images/record-density.png)
 
-- **What it shows:** a 2D heatmap of places where many inventory records sit close together.
+- **What it shows:** a 2D heatmap of places where many mapped inventory records sit close together.
 - **What it means:** the strong western hotspot mainly shows where data collection was concentrated. It must not be read as proof that those places hold more groundwater.
 
-#### 2. 3D inventory density
+#### 2. 3D mapped-record density
 
 ![Current 3D inventory-density view](groundwater-story-map/docs/images/inventory-density-3d.png)
 
-- **What it shows:** groundwater records grouped into H3 hexagons. Taller columns contain more records.
+- **What it shows:** mapped groundwater-source records grouped into H3 hexagons. Taller columns contain more records.
 - **What it means:** the large difference between western Kenya and much of the country is a coverage imbalance in this inventory. The columns compare record counts, not aquifer size or water yield.
 
 #### 3. 3D median construction depth
@@ -134,7 +152,7 @@ The README uses relative image links. This allows the same images to appear when
 
 ![Current groundwater-source-location view](groundwater-story-map/docs/images/source-locations.png)
 
-- **What it shows:** individual recorded boreholes, protected dug wells, unprotected dug wells and springs, coloured by source type.
+- **What it shows:** individual mapped records of boreholes, protected dug wells, unprotected dug wells and springs, coloured by source type.
 - **What it means:** this is the best view for locating and filtering known records. Each point is a lead for field verification, not proof of ownership, permit status or current use.
 
 #### 6. Construction-depth records
@@ -191,7 +209,7 @@ Operational work should check the latest law, WRA notices, permit records and ra
 4. [Water Act, 2016 — Kenya Law](https://new.kenyalaw.org/akn/ke/act/2016/43)
 5. [WRA legal notices](https://wra.go.ke/legal-notices/)
 
-Last source check: **3 October 2026**.
+Last source check: **6 October 2026**.
 
 ---
 
@@ -264,7 +282,7 @@ The notebook produces these detailed HTML files:
 
 | Notebook output                       | What it shows                             | Dashboard equivalent                |
 | ------------------------------------- | ----------------------------------------- | ----------------------------------- |
-| `gw_hex_density_3d.html`            | H3 record counts                          | 3D inventory density                |
+| `gw_hex_density_3d.html`            | H3 mapped-record counts                   | 3D mapped-record density            |
 | `gw_hex_depth_3d.html`              | H3 median construction depth              | 3D median construction depth        |
 | `gw_monitoring_gap_3d.html`         | Distance to the nearest record            | 3D groundwater record coverage gaps |
 | `gw_terrain_wells_entire_area.html` | National terrain and downward well lines  | Wells below ground                  |
@@ -330,16 +348,18 @@ The main Python packages are pandas, GeoPandas, NumPy, SciPy, H3, PyDeck, Plotly
 
 The application has two main screens:
 
-- **Part A — Kenya's Water Story:** a five-scene animated introduction followed by the written story.
-- **Part B — Interactive Analytics Dashboard:** maps, filters, statistics and charts based on the notebook findings.
+- **The story:** a five-scene animated introduction followed by an editorial written story that explains how to read the evidence.
+- **Explore the data:** nine map views, filters, statistics and charts based on the notebook findings.
 
 The five story scenes follow this order:
 
-1. Main finding and the central blind spot.
-2. Heavy concentration in Kakamega and Vihiga.
-3. Missing construction-depth information.
-4. The “tool, not a census” reading rule.
-5. The five-step WRA action path.
+1. **The question:** 21,284 mapped water-source records across 40 counties.
+2. **The catch:** 72.8% of mapped records sit in Kakamega and Vihiga.
+3. **Question the data:** unusual 300-metre and 280-metre entries in Busia illustrate why precise values may still need checking.
+4. **Read the gaps:** blank space means missing evidence, not missing groundwater.
+5. **From dot to evidence:** a shared five-step process turns a map clue into a checked record.
+
+The written story then develops those ideas through permanent reading guides, a plain-language explanation of WRA's role, the **Explore the analysis · Nine views, three questions** section and the same five-step checking process used in the animated introduction.
 
 ### Technology
 
@@ -356,12 +376,13 @@ The application is a static website. It has no Node.js runtime, React framework,
 
 ```text
 Ground Water Analysis/
+├── .gitignore
 ├── README.md
 ├── Underground_analysis.ipynb
 ├── groundwater_cleaned.csv
 ├── kenya_groundwater_mwater_migrated.csv
 ├── gadm36_KEN_1.*
-├── gw_*.html
+├── gw_*.html                     # Generated locally; ignored by Git
 └── groundwater-story-map/
     ├── index.html                 # Main story and dashboard document
     ├── icons8-favicon-100.png
@@ -370,6 +391,7 @@ Ground Water Analysis/
     ├── js/
     │   └── app.js                 # Story, dashboard, MapLibre and WebGL logic
     ├── scripts/
+    │   ├── build_site.ps1         # Rebuilds the GitHub Pages bundle
     │   ├── prepare_story_data.py
     │   └── prepare_notebook_surfaces.py
     ├── public/data/               # Prepared browser datasets
@@ -379,7 +401,7 @@ Ground Water Analysis/
 
 ### How the dashboard works
 
-The left panel contains filters and the **Notebook outputs → Analysis view** list. The centre panel contains the active map. The right panel contains totals and comparisons for the current selection. Two charts sit below the map.
+The left panel contains **Narrow what you see** filters and the grouped **Analysis views** selector. The centre panel contains the active map. The right panel explains the active view, then shows quick numbers and county comparisons. Two charts sit below the map.
 
 Point-based views can be filtered by:
 
@@ -387,7 +409,9 @@ Point-based views can be filtered by:
 - groundwater-source type; and
 - whether construction depth is available.
 
-The three H3 views are fixed national results from the notebook pipeline. Selecting one resets point filters so the map is not mistaken for a newly calculated filtered surface.
+The county shortcut includes every county represented in the mapped inventory, while **All counties** restores the national view.
+
+The three H3 views are prepared national results from the notebook pipeline. Point filters do not recompute those surfaces, so they must be read as national analysis outputs rather than live filtered calculations.
 
 The right statistics panel can expand over the map. Each lower chart also has its own expand button. Press `Escape` or use the close button to return to the normal layout.
 
@@ -395,7 +419,7 @@ Left and right panels add vertical scrollbars only when their content is taller 
 
 ### Map controls
 
-In normal view, the Analysis View list in the left panel selects the active notebook output and the map key appears below the map. In fullscreen view, a separate Notebook Outputs selector and a separate map key appear inside MapLibre. The current map title and description stay synchronised between the two layouts.
+In normal view, the **Analysis views** list in the left panel selects the active output and the map key appears below the map. In fullscreen view, a separate analysis selector and map key appear inside MapLibre. The current map title and description stay synchronised between the two layouts.
 
 The map also provides:
 
@@ -418,7 +442,15 @@ python -m http.server 8000
 
 Open `http://localhost:8000/` in a browser. Story and dashboard navigation stays on this single root URL.
 
-For deployment, publish the contents of `groundwater-story-map/` to any static web host. Keep the existing directory structure so the local JavaScript, CSS, MapLibre files, data and images resolve correctly.
+For GitHub Pages deployment, `scripts/build_site.ps1` rebuilds the ignored `dist/` folder from the source files. The Pages workflow runs that script automatically on pushes to `main`, then publishes `groundwater-story-map/dist/`.
+
+To inspect the exact deployment bundle locally, run:
+
+```powershell
+./groundwater-story-map/scripts/build_site.ps1
+cd groundwater-story-map/dist
+python -m http.server 8000
+```
 
 ### Important application limits
 

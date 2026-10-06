@@ -4,7 +4,14 @@ on:
   push:
     branches: [main]
     paths:
-      - "groundwater-story-map/dist/**"
+      - "groundwater-story-map/index.html"
+      - "groundwater-story-map/icons8-favicon-100.png"
+      - "groundwater-story-map/css/**"
+      - "groundwater-story-map/js/**"
+      - "groundwater-story-map/public/**"
+      - "groundwater-story-map/docs/**"
+      - "groundwater-story-map/vendor/**"
+      - "groundwater-story-map/scripts/build_site.ps1"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -29,6 +36,10 @@ jobs:
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
+
+      - name: Build static site bundle
+        shell: pwsh
+        run: ./groundwater-story-map/scripts/build_site.ps1
 
       - name: Upload static site
         uses: actions/upload-pages-artifact@v4

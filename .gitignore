@@ -1,0 +1,23 @@
+# Operating-system and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Python and notebook caches
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Local logs, previews and QA captures
+*.log
+*-preview.png
+*-qa.png
+qa-*.html
+
+# Reproducible standalone notebook exports (kept locally, not published)
+gw_*.html
+
+# Generated GitHub Pages bundle
+groundwater-story-map/dist/
+

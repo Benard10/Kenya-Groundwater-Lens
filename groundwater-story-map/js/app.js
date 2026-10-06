@@ -211,16 +211,95 @@ const TYPE_META = {
 };
 
 const ANALYSIS_VIEWS = {
-  density: ["Record-density map", "Brighter areas contain more records; this is survey concentration, not groundwater abundance."],
-  hexDensity: ["3D inventory density", "Notebook H3 output: height and colour show record concentration in each national grid cell."],
+  density: ["Mapped-record density", "Brighter areas contain more mapped records; this is survey concentration, not groundwater abundance."],
+  hexDensity: ["3D mapped-record density", "Notebook H3 output: height and colour show mapped-record concentration in each national grid cell."],
   hexDepth: ["3D median construction depth", "Notebook H3 output: height and colour show median depth; grey cells have fewer than five measurements."],
   monitoringGap: ["3D groundwater record coverage gaps", "Taller, brighter cells are farther from the nearest mapped groundwater-source record. This shows where records are sparse, not where groundwater is scarce."],
-  points: ["Groundwater-source locations", "Every visible point is one source record in the public inventory."],
+  points: ["Mapped groundwater-source records", "Every visible point is one mapped source record in the public inventory."],
   depth: ["Construction-depth map", "Colour and size compare 552 usable depth records; depth is not groundwater level."],
   coverage: ["Depth-data coverage", "Green records include construction depth; muted red records do not."],
   timeline: ["Record-update timeline", "Records updated up to the selected month. This is metadata activity, not drilling activity."],
   wells3d: ["Wells below ground", "3D terrain with 552 usable construction depths projected downward at 150× vertical exaggeration."]
 };
+
+const VIEW_GUIDE = {
+  density: {
+    group: "Where are records mapped?", title: "Where mapped records are concentrated", story: "#story-catch",
+    seeing: "Bright areas have many mapped records close together.",
+    question: "Does this show more sources, more survey work, or both?",
+    next: "Compare the cluster with WRA files, county inventories and local field knowledge.",
+    caution: "A bright area does not necessarily have more groundwater.",
+    mini: "Bright = more mapped records, not more water."
+  },
+  hexDensity: {
+    group: "Where are records mapped?", title: "Compare mapped-record counts in equal areas", story: "#story-catch",
+    seeing: "Each equal-sized cell groups nearby mapped records. Taller, brighter cells contain more entries.",
+    question: "Why are some equal-sized areas recorded much more heavily than others?",
+    next: "Use the contrast to prioritise coverage checks, not to rank groundwater availability.",
+    caution: "The height is a display aid. It is not the height or amount of groundwater.",
+    mini: "Taller = more mapped records in the cell, not more water."
+  },
+  monitoringGap: {
+    group: "Where are records mapped?", title: "Where nearby mapped records are scarce", story: "#story-gaps",
+    seeing: "Taller, brighter cells are farther from the nearest mapped source record.",
+    question: "Is this a real lack of sources, or a gap between datasets and survey coverage?",
+    next: "Check WRA and county records, then plan targeted inventory work where evidence remains thin.",
+    caution: "A large record gap does not prove that groundwater is absent or scarce.",
+    mini: "Taller = farther from a recorded source, not less groundwater."
+  },
+  points: {
+    group: "Where are records mapped?", title: "See each mapped source record", story: "#story-reading",
+    seeing: "Each dot is one mapped record of a borehole, well or spring. Colours separate source types.",
+    question: "Does this public entry match an official record and the source that exists today?",
+    next: "Ask WRA, the county, data publisher and source owner or operator to confirm the location and record details.",
+    caution: "A dot does not prove ownership, permit status, current use or a problem.",
+    mini: "One dot = one record to check."
+  },
+  hexDepth: {
+    group: "How deep were sources built?", title: "Compare typical recorded depth by area", story: "#story-quality",
+    seeing: "Height and colour compare the middle recorded construction depth in cells with at least five depth values. Grey cells have fewer than five.",
+    question: "Do unusually deep or shallow cells fit local geology and the original borehole records?",
+    next: "Compare outlying cells with completion logs, original forms, permit information and technical knowledge.",
+    caution: "Construction depth is not the water table, aquifer thickness or amount of water available.",
+    mini: "Taller = built deeper, not more water."
+  },
+  depth: {
+    group: "How deep were sources built?", title: "See sources with a recorded depth", story: "#story-quality",
+    seeing: "Colour and dot size compare the 552 records with a usable construction depth.",
+    question: "Which extreme values are valid deep sources, and which need a unit or entry check?",
+    next: "Trace unusual depths to the source record, borehole log, owner or operator, and field evidence.",
+    caution: "This small sample does not describe typical depth across all of Kenya.",
+    mini: "Larger, warmer dots = built deeper, not more water."
+  },
+  coverage: {
+    group: "How deep were sources built?", title: "See where depth is missing", story: "#story-reading",
+    seeing: "Green records include a usable construction depth. Red records do not.",
+    question: "Who may hold the missing depth: WRA, a county, the driller, owner, operator or data publisher?",
+    next: "Use completion records and original forms to fill gaps only when the value can be supported.",
+    caution: "Missing depth is not zero depth and does not show that anything is wrong.",
+    mini: "Green = depth recorded. Red = depth missing."
+  },
+  wells3d: {
+    group: "How deep were sources built?", title: "Look below the ground surface", story: "#story-quality",
+    seeing: "Each coloured line starts at the ground surface and extends down by the recorded construction depth. Heights are stretched so they can be seen.",
+    question: "Do the longest lines match construction documents and what is found at the site?",
+    next: "Treat the longest lines as verification leads, especially where nearby records differ sharply.",
+    caution: "The lines do not show the water table, aquifer shape, water quality or pumping capacity.",
+    mini: "Longer = built deeper. Heights are stretched and are not real scale."
+  },
+  timeline: {
+    group: "When were records last updated?", title: "When records were last updated", story: "#story-updates",
+    seeing: "The map groups records by the month their database entry was last updated.",
+    question: "Does an old date mean the source is unchanged, inactive, or simply not updated here?",
+    next: "Check current status with WRA, counties, data publishers and source operators before using the record operationally.",
+    caution: "The dates are not drilling, permit or water-use start dates.",
+    mini: "Date = last record update, not drilling date."
+  }
+};
+
+const VIEW_GROUPS = ["Where are records mapped?", "How deep were sources built?", "When were records last updated?"];
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const motionDuration = duration => prefersReducedMotion ? 0 : duration;
 
 const TYPE_COLOR = [
   "match", ["get", "t"],
@@ -245,7 +324,7 @@ const state = {
   fullscreenTitleControl: null,
   wellsLayer: null,
   currentScene: 0,
-  playing: !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  playing: !prefersReducedMotion,
   mapMode: 'density',
   county: 'All counties',
   activeTypes: Object.keys(TYPE_META),
@@ -272,12 +351,12 @@ function formatMonthIndex(value) {
 function buildScenes(summary) {
   return [
     {
-      label: "Main finding",
-      kicker: "MAPPING KENYA'S GROUNDWATER",
-      title: `<em>${format(summary.total)}</em> records reveal a national picture and a major blind spot.`,
-      copy: `This public inventory brings together wells, boreholes and springs from ${format(summary.counties)} counties. It is a valuable starting point, but it mainly shows where surveys created records, not every groundwater source in Kenya.`,
-      metrics: [[format(summary.total), "mapped records"], [format(summary.counties), "counties represented"]],
-      guardrail: "Use this map to begin an enquiry. Finish it with official records and a field check.",
+      label: "The question",
+      kicker: "WHERE ARE WATER-SOURCE RECORDS MAPPED?",
+      title: `<em>${format(summary.total)}</em> mapped water-source records in ${format(summary.counties)} counties.`,
+      copy: "Where should Kenya check groundwater records first—and which records need confirmation? This public list can reveal clusters, gaps, unusual values and records that may be old.",
+      metrics: [[format(summary.total), "mapped records"], [format(summary.counties), "counties covered"]],
+      guardrail: "This is a screening tool. It raises questions; official records and fieldwork answer them.",
       camera: { center: [37.75, 0.15], zoom: 5.35, pitch: 18, bearing: 0 },
       filter: null,
       color: TYPE_COLOR,
@@ -285,12 +364,12 @@ function buildScenes(summary) {
       opacity: 0.78
     },
     {
-      label: "Map pattern",
-      kicker: "THE ILLUSION OF ABUNDANCE",
-      title: `<em>${summary.westernShare}%</em> of records sit in just two counties.`,
-      copy: `Kakamega and Vihiga contain ${format(summary.westernCount)} records. This strong western cluster tells us where data collection was strongest. It does not mean these counties hold ${summary.westernShare}% of Kenya's groundwater.`,
-      metrics: [[format(summary.countyCounts.Kakamega), "Kakamega records"], [format(summary.countyCounts.Vihiga), "Vihiga records"]],
-      guardrail: "Survey effort and data coverage strongly influence the pattern on this map.",
+      label: "The catch",
+      kicker: "A MAP OF RECORDS IS NOT A MAP OF WATER",
+      title: `<em>${summary.westernShare}%</em> of mapped records sit in just two counties.`,
+      copy: `Kakamega and Vihiga contain ${format(summary.westernCount)} mapped records. Like a street with many restaurant reviews, this may show more recording activity, not more of the thing being counted.`,
+      metrics: [[format(summary.countyCounts.Kakamega), "Kakamega mapped records"], [format(summary.countyCounts.Vihiga), "Vihiga mapped records"]],
+      guardrail: "Bright means more mapped records, not more water. Quiet means less mapped information, not no water.",
       camera: { center: [34.75, 0.22], zoom: 7.25, pitch: 34, bearing: -9 },
       filter: ["in", ["get", "c"], ["literal", ["Kakamega", "Vihiga"]]],
       color: ["match", ["get", "c"], "Kakamega", "#38c9f3", "Vihiga", "#ffb21c", "#60737b"],
@@ -298,25 +377,25 @@ function buildScenes(summary) {
       opacity: 0.72
     },
     {
-      label: "Missing depth",
-      kicker: "THE DATA BLACK BOX",
-      title: `Only <em>${summary.depthShare}%</em> tell us how deep a source was built.`,
-      copy: `Only ${format(summary.depthCount)} records have a usable construction depth. Their median is ${format(summary.medianDepth)} metres. Even then, construction depth is not the water-table depth and cannot tell us how much water is available.`,
-      metrics: [[format(summary.depthCount), "usable depth records"], [`${format(summary.medianDepth)} m`, "median construction depth"]],
-      guardrail: "The absence of a depth value is a data gap. It does not indicate a shallow well or provide evidence of non-compliance.",
-      camera: { center: [36.9, 0.1], zoom: 5.6, pitch: 28, bearing: 8 },
-      filter: ["==", ["get", "hasDepth"], 1],
+      label: "Question the data",
+      kicker: "A PRECISE VALUE CAN STILL NEED CHECKING",
+      title: `<em>300 m</em> is recorded for two entries in Busia.`,
+      copy: "Two nearby entries record 280 metres. These values may be valid, but the dashboard cannot confirm them. Original forms, borehole logs, permit information, local geology and a site check can.",
+      metrics: [["300 m", "two Busia entries"], ["280 m", "two nearby entries"]],
+      guardrail: "An unusual value is a verification lead, not proof that the record is wrong.",
+      camera: { center: [34.07, 0.18], zoom: 9, pitch: 32, bearing: -8 },
+      filter: ["all", ["==", ["get", "hasDepth"], 1], ["==", ["get", "c"], "Busia"]],
       color: ["interpolate", ["linear"], ["get", "depth"], 0, "#6de2c1", 75, "#ffcf4a", 200, "#ff775f", 600, "#d8366f"],
       radius: ["interpolate", ["linear"], ["get", "depth"], 0, 3, 100, 5, 600, 9],
       opacity: 0.9
     },
     {
-      label: "Read with care",
-      kicker: "A TOOL, NOT A CENSUS",
+      label: "Read the gaps",
+      kicker: "MISSING INFORMATION CAN GUIDE THE NEXT CHECK",
       title: `Blank space means <em>missing evidence</em>, not missing groundwater.`,
-      copy: "Bright clusters show stronger inventory coverage. Quiet areas show that this dataset has fewer nearby records. Neither pattern, on its own, proves how much groundwater exists, how deep it lies or whether a source is active.",
+      copy: "Bright clusters show stronger mapped-record coverage. Quiet areas show that this dataset has fewer nearby mapped records. Neither pattern, on its own, proves how much groundwater exists, how deep it lies or whether a source is active.",
       metrics: [[`${format(100 - summary.depthShare)}%`, "without usable depth"], [format(summary.total), "leads that still need context"]],
-      guardrail: "Do not turn survey coverage into a claim about groundwater abundance, scarcity or compliance.",
+      guardrail: "The dashboard shows where to look. Fieldwork shows what is true.",
       camera: { center: [37.25, 0.1], zoom: 5.25, pitch: 38, bearing: -8 },
       filter: null,
       color: TYPE_COLOR,
@@ -324,19 +403,25 @@ function buildScenes(summary) {
       opacity: 0.64
     },
     {
-      label: "WRA action",
-      kicker: "FROM MAP TO MANAGEMENT",
-      title: `The map gives WRA the clues. <em>Fieldwork turns them into action.</em>`,
-      copy: "Start with likely wells and boreholes, match them to official records, visit the site, measure use where required, and then manage each source fairly. This turns a public inventory into better evidence without treating every dot as a final answer.",
-      metrics: [[format(summary.wellCount), "well and borehole leads"], ["5 steps", "from identification to fair action"]],
-      guardrail: "Permitting, charging or enforcement must use verified WRA records, measured use and a fair correction process, not this map alone.",
+      label: "From dot to evidence",
+      kicker: "A SHARED CHECKING PROCESS",
+      title: `A dot on the map is a clue. <em>Checking turns it into a fact.</em>`,
+      copy: `The map shows ${format(summary.wellCount)} mapped records of wells and boreholes that are worth a closer look. The other ${format(summary.total - summary.wellCount)} mapped records are springs. Each dot is a starting point, not an answer. WRA can work with counties, data publishers, source owners and operators to confirm what it represents.`,
+      metrics: [[format(summary.wellCount), "mapped well and borehole records"], ["5 steps", "from a dot to a checked record"]],
+      guardrail: "The map tells us where to look first. It does not replace WRA's files, expert checks or a visit to the site.",
       camera: { center: [37.45, 0.05], zoom: 5.15, pitch: 52, bearing: 12 },
       filter: ["in", ["get", "t"], ["literal", ["bh", "pdw", "udw"]]],
       color: "#38c9f3",
       radius: ["interpolate", ["linear"], ["zoom"], 4, 1.5, 8, 3],
       opacity: 0.24,
       flow: true,
-      flowLabels: ["Identify source", "Match records", "Visit the site", "Measure use", "Manage fairly"]
+      flowSteps: [
+        { title: "Spot it", copy: "Pick a dot to check." },
+        { title: "Find the record", copy: "Look in WRA's records." },
+        { title: "Compare the papers", copy: "Match permits and files." },
+        { title: "Visit the site", copy: "Check what is there." },
+        { title: "Confirm or correct", copy: "Keep or fix the record." }
+      ]
     }
   ];
 }
@@ -429,6 +514,23 @@ function showMapNotice(containerId, message) {
   container.appendChild(errorDiv);
 }
 
+function showDashboardLoadError() {
+  const message = 'The records could not be loaded. Please refresh the page and try again.';
+  ['kpi-records', 'kpi-counties', 'kpi-depth'].forEach(id => {
+    const element = document.getElementById(id);
+    if (element) element.textContent = '—';
+  });
+  const depthCount = document.getElementById('depth-count');
+  if (depthCount) depthCount.textContent = 'Records unavailable';
+  ['type-bar-list', 'county-bar-list', 'depth-histogram', 'update-chart'].forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.classList.remove('loading-state');
+      element.textContent = message;
+    }
+  });
+}
+
 // Render Animation UI
 function renderAnimationUI() {
   const scenes = buildScenes(state.dataset.summary);
@@ -466,7 +568,7 @@ function updateScene() {
   state.animationMap.setPaintProperty('groundwater-points', 'circle-opacity', scene.opacity);
   state.animationMap.setPaintProperty('groundwater-glow', 'circle-color', scene.color);
   state.animationMap.setPaintProperty('groundwater-glow', 'circle-opacity', Math.min(scene.opacity * 0.33, 0.3));
-  state.animationMap.flyTo({ ...scene.camera, duration: 2200, essential: true });
+  state.animationMap.flyTo({ ...scene.camera, duration: motionDuration(2200), essential: false });
 
   // Update UI
   document.querySelectorAll('.scene-tab').forEach((btn, i) => {
@@ -483,6 +585,18 @@ function renderNarrative() {
   const scenes = buildScenes(state.dataset.summary);
   const scene = scenes[state.currentScene];
   const narrative = document.getElementById('narrative');
+  const storyAnimation = document.getElementById('story-animation');
+  const mapCaption = document.getElementById('scene-map-caption');
+  const flowSteps = scene.flowSteps || [
+    { title: "Spot it", copy: "Pick a dot to check." },
+    { title: "Find the record", copy: "Look in WRA's records." },
+    { title: "Compare the papers", copy: "Match permits and files." },
+    { title: "Visit the site", copy: "Check what is there." },
+    { title: "Confirm or correct", copy: "Keep or fix the record." }
+  ];
+
+  storyAnimation.classList.toggle('is-checking-scene', Boolean(scene.flow));
+  mapCaption.hidden = !scene.flow;
 
   narrative.innerHTML = `
     <p class="eyebrow">${scene.kicker}</p>
@@ -491,9 +605,9 @@ function renderNarrative() {
     <div class="metric-row">
       ${scene.metrics.map(([value, label]) => `<article><strong>${value}</strong><span>${label}</span></article>`).join('')}
     </div>
-    <div class="wra-flow ${scene.flow ? 'is-visible' : ''}" aria-label="Responsible WRA implementation pathway">
-      ${(scene.flowLabels || ["Inventory lead", "Match permit", "Field verify", "Meter use", "Charge fairly"]).map((label, index) => `
-        <div><span>${index + 1}</span><b>${label}</b></div>${index < 4 ? '<i>→</i>' : ''}
+    <div class="wra-flow ${scene.flow ? 'is-visible' : ''}" aria-label="Five steps from a map dot to a checked record">
+      ${flowSteps.map((step, index) => `
+        <div><span>${index + 1}</span><b>${step.title}</b><small>${step.copy}</small></div>${index < 4 ? '<i>→</i>' : ''}
       `).join('')}
     </div>
     <p class="guardrail"><span>Important</span> ${scene.guardrail}</p>
@@ -510,7 +624,7 @@ function renderFooter() {
         <span id="play-icon">${state.playing ? 'Ⅱ' : '▶'}</span><span>${state.playing ? 'Pause' : 'Play'}</span>
       </button>
       <button id="next-scene">Next <span>→</span></button>
-      <a class="story-scroll-cue" href="#water-story">Continue to the story ↓</a>
+      <a class="story-scroll-cue" href="#water-story">Read the story ↓</a>
       <div class="scene-counter"><span>${String(state.currentScene + 1).padStart(2, '0')}</span> / 05</div>
     </div>
     <div class="progress-track">
@@ -521,6 +635,18 @@ function renderFooter() {
   document.getElementById('prev-scene').addEventListener('click', () => goToScene(state.currentScene - 1));
   document.getElementById('next-scene').addEventListener('click', () => goToScene(state.currentScene + 1));
   document.getElementById('play-pause').addEventListener('click', togglePlay);
+  document.querySelector('.story-scroll-cue')?.addEventListener('click', event => {
+    event.preventDefault();
+    const storyPage = document.querySelector('.story-page');
+    const storyBody = document.getElementById('water-story');
+    if (!storyPage || !storyBody) return;
+    state.playing = false;
+    stopAnimationTimer();
+    renderFooter();
+    window.requestAnimationFrame(() => {
+      storyBody.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    });
+  });
 }
 
 // Render Legend
@@ -576,6 +702,7 @@ function stopAnimationTimer() {
 
 // Keyboard controls
 document.addEventListener('keydown', (event) => {
+  if (state.activeView !== 'story' || /INPUT|SELECT|BUTTON|A|SUMMARY/.test(event.target.tagName)) return;
   if (event.key === 'ArrowRight') goToScene(state.currentScene + 1);
   if (event.key === 'ArrowLeft') goToScene(state.currentScene - 1);
   if (event.key === ' ') {
@@ -589,18 +716,18 @@ function renderStoryContent() {
   const findings = [
     {
       number: "21,284",
-      title: "A useful national starting point",
-      text: "The inventory brings together wells, boreholes and springs recorded across 40 counties. It gives water managers many places to start checking."
+      title: "Mapped records",
+      text: "Wells, boreholes and springs appear in the public list."
     },
     {
-      number: "72.8%",
-      title: "The illusion of abundance",
-      text: "Nearly three quarters of all records are in Kakamega and Vihiga. This shows strong data collection in those counties, not Kenya's true share of groundwater."
+      number: "40",
+      title: "Counties covered",
+      text: "Some counties have many mapped records. Others have very few."
     },
     {
-      number: "2.6%",
-      title: "The depth data black box",
-      text: "Only 552 records can support depth comparisons. Their median construction depth is 75 metres, but construction depth is not the water-table depth."
+      number: "552",
+      title: "Records with depth",
+      text: "Only 2.6% of records say how deep a source was built."
     }
   ];
 
@@ -616,6 +743,15 @@ function renderStoryContent() {
   if (storyCta) {
     storyCta.addEventListener('click', () => switchView('dashboard'));
   }
+
+  document.querySelectorAll('.story-map-link').forEach(button => {
+    button.addEventListener('click', () => {
+      state.mapMode = button.dataset.mode || 'density';
+      state.county = button.dataset.county || 'All counties';
+      state.depthOnly = button.dataset.depthOnly === 'true';
+      switchView('dashboard');
+    });
+  });
 }
 
 // Dashboard Initialization
@@ -638,7 +774,8 @@ async function initDashboard() {
     if (monthValues.length) state.timelineIndex = Math.max(...monthValues);
   } catch (error) {
     console.error('Failed to load dashboard data:', error);
-    showMapNotice('dashboard-map', `Dashboard data could not be loaded: ${error.message}`);
+    showMapNotice('dashboard-map', 'The records could not be loaded. Please refresh the page and try again.');
+    showDashboardLoadError();
     state.dashboardInitializing = false;
     return;
   }
@@ -654,6 +791,12 @@ function renderDashboardUI() {
   const counties = state.dataset ? Object.keys(state.dataset.summary.countyCounts).sort() : [];
   countySelect.innerHTML = '<option value="All counties">All counties</option>' +
     counties.map(county => `<option value="${county}">${county}</option>`).join('');
+  countySelect.value = state.county;
+
+  const exampleCountySelect = document.getElementById('example-county-select');
+  exampleCountySelect.innerHTML = '<option value="">Choose a county…</option>' +
+    counties.map(county => `<option value="${county}">${county}</option>`).join('');
+  exampleCountySelect.value = state.county === 'All counties' ? '' : state.county;
 
   // Type filters
   const typeFilters = document.getElementById('type-filters');
@@ -673,6 +816,7 @@ function renderDashboardUI() {
 
   countySelect.addEventListener('change', (e) => {
     state.county = e.target.value;
+    exampleCountySelect.value = state.county === 'All counties' ? '' : state.county;
     updateDashboardFilters();
   });
 
@@ -685,17 +829,49 @@ function renderDashboardUI() {
 
   // Analysis views
   const analysisViews = document.getElementById('analysis-views');
-  analysisViews.innerHTML = Object.entries(ANALYSIS_VIEWS).map(([key, value]) => `
-    <button class="${state.mapMode === key ? 'is-active' : ''}" data-mode="${key}">
-      <i></i><span><b>${value[0]}</b><small>${value[1]}</small></span>
-    </button>
-  `).join('');
+  analysisViews.innerHTML = VIEW_GROUPS.map(group => {
+    const groupId = `group-${group.replace(/\W+/g, '-').toLowerCase()}`;
+    const buttons = Object.entries(VIEW_GUIDE).filter(([, guide]) => guide.group === group).map(([key, guide]) => `
+      <button class="${state.mapMode === key ? 'is-active' : ''}" data-mode="${key}">
+        <i aria-hidden="true"></i><span><b>${guide.title}</b><small>${ANALYSIS_VIEWS[key][0]}</small></span>
+      </button>
+    `).join('');
+    return `<section class="analysis-group" aria-labelledby="${groupId}"><h3 id="${groupId}">${group}</h3>${buttons}</section>`;
+  }).join('');
 
   analysisViews.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', () => {
       state.mapMode = btn.dataset.mode;
       updateDashboardMode();
     });
+  });
+
+  document.getElementById('depth-only').checked = state.depthOnly;
+  exampleCountySelect.addEventListener('change', () => {
+    if (!exampleCountySelect.value) return;
+    state.county = exampleCountySelect.value;
+    countySelect.value = state.county;
+    updateDashboardFilters();
+  });
+  document.querySelector('[data-example-depth]')?.addEventListener('click', () => {
+    state.depthOnly = true;
+    document.getElementById('depth-only').checked = true;
+    updateDashboardFilters();
+  });
+
+  const mobileFilterToggle = document.getElementById('mobile-filter-toggle');
+  mobileFilterToggle?.addEventListener('click', () => {
+    const expanded = mobileFilterToggle.getAttribute('aria-expanded') === 'true';
+    mobileFilterToggle.setAttribute('aria-expanded', String(!expanded));
+    document.getElementById('filter-panel').classList.toggle('is-mobile-open', !expanded);
+  });
+
+  const mobileViewToggle = document.getElementById('mobile-view-toggle');
+  mobileViewToggle?.addEventListener('click', () => {
+    const expanded = mobileViewToggle.getAttribute('aria-expanded') === 'true';
+    mobileViewToggle.setAttribute('aria-expanded', String(!expanded));
+    document.querySelector('.screening-panel').classList.toggle('is-mobile-open', !expanded);
+    mobileViewToggle.textContent = expanded ? 'Choose a view' : 'Hide views';
   });
 
   // Well scale control
@@ -774,7 +950,7 @@ function createAnalysisViewControl(onSelect) {
       trigger.className = 'analysis-switcher-trigger';
       trigger.setAttribute('aria-haspopup', 'menu');
       trigger.setAttribute('aria-expanded', 'false');
-      trigger.innerHTML = '<span>Notebook outputs</span><b></b><i aria-hidden="true">▾</i>';
+      trigger.innerHTML = '<span>Analysis views</span><b></b><i aria-hidden="true">▾</i>';
       currentLabel = trigger.querySelector('b');
 
       menu = document.createElement('div');
@@ -782,12 +958,12 @@ function createAnalysisViewControl(onSelect) {
       menu.setAttribute('role', 'menu');
       menu.hidden = true;
 
-      Object.entries(ANALYSIS_VIEWS).forEach(([mode, [title]]) => {
+      Object.entries(VIEW_GUIDE).forEach(([mode, guide]) => {
         const button = document.createElement('button');
         button.type = 'button';
         button.dataset.mode = mode;
         button.setAttribute('role', 'menuitemradio');
-        button.innerHTML = `<i aria-hidden="true"></i><span>${title}</span>`;
+        button.innerHTML = `<i aria-hidden="true"></i><span>${guide.title}</span>`;
         button.addEventListener('click', event => {
           event.stopPropagation();
           onSelect(mode);
@@ -818,7 +994,7 @@ function createAnalysisViewControl(onSelect) {
 
     setActive(mode) {
       if (!currentLabel || !menu || !ANALYSIS_VIEWS[mode]) return;
-      currentLabel.textContent = ANALYSIS_VIEWS[mode][0];
+      currentLabel.textContent = VIEW_GUIDE[mode].title;
       menu.querySelectorAll('button').forEach(button => {
         const active = button.dataset.mode === mode;
         button.classList.toggle('is-active', active);
@@ -1146,6 +1322,22 @@ function updateDashboardFilters() {
   updateAnalytics(filtered);
 }
 
+function updateViewGuide() {
+  const guide = VIEW_GUIDE[state.mapMode];
+  if (!guide) return;
+  document.getElementById('view-question').textContent = guide.group;
+  document.getElementById('view-plain-title').textContent = guide.title;
+  document.getElementById('view-technical-title').textContent = ANALYSIS_VIEWS[state.mapMode][0];
+  document.getElementById('view-seeing').textContent = guide.seeing;
+  document.getElementById('view-question-raised').textContent = guide.question;
+  document.getElementById('view-next-check').textContent = guide.next;
+  document.getElementById('view-caution').textContent = guide.caution;
+  document.getElementById('heavy-view-note').hidden = state.mapMode !== 'wells3d';
+  const storyLink = document.getElementById('view-story-link');
+  storyLink.href = guide.story;
+  storyLink.dataset.storyTarget = guide.story;
+}
+
 // Update Dashboard Mode
 function updateDashboardMode() {
   if (!state.dashboardMap) return;
@@ -1201,10 +1393,8 @@ function updateDashboardMode() {
   }
 
   // Update UI
-  const currentTitle = ANALYSIS_VIEWS[state.mapMode][0];
-  const currentSubtitle = `${state.county} · ${format(getFilteredRecords().length)} visible records · ${ANALYSIS_VIEWS[state.mapMode][1]}`;
-  document.getElementById('map-title-text').textContent = currentTitle;
-  document.getElementById('map-subtitle').textContent = currentSubtitle;
+  const currentTitle = VIEW_GUIDE[state.mapMode].title;
+  const currentSubtitle = `${ANALYSIS_VIEWS[state.mapMode][0]} · ${state.county} · ${format(getFilteredRecords().length)} visible mapped records`;
   state.fullscreenTitleControl?.setContent(currentTitle, currentSubtitle);
   state.analysisViewControl?.setActive(state.mapMode);
 
@@ -1212,19 +1402,20 @@ function updateDashboardMode() {
   document.getElementById('timeline-control').style.display = state.mapMode === 'timeline' ? 'grid' : 'none';
 
   updateLegend();
+  updateViewGuide();
 
   // Camera movement
   if (state.county !== 'All counties' && getFilteredRecords().length) {
     const filtered = getFilteredRecords();
     const bounds = filtered.reduce((box, record) => box.extend([record[0], record[1]]), new maplibregl.LngLatBounds());
-    state.dashboardMap.fitBounds(bounds, { padding: 80, maxZoom: wells3d ? 8.5 : 10, duration: 900 });
-    if (wells3d) state.dashboardMap.easeTo({ pitch: 68, bearing: -18, duration: 1100 });
+    state.dashboardMap.fitBounds(bounds, { padding: 80, maxZoom: wells3d ? 8.5 : 10, duration: motionDuration(900) });
+    if (wells3d) state.dashboardMap.easeTo({ pitch: 68, bearing: -18, duration: motionDuration(1100) });
   } else if (state.county === 'All counties') {
     state.dashboardMap.flyTo(wells3d
-      ? { center: [37.2, 0.05], zoom: 5.7, pitch: 68, bearing: -18, duration: 1200 }
+      ? { center: [37.2, 0.05], zoom: 5.7, pitch: 68, bearing: -18, duration: motionDuration(1200) }
       : notebookSurface
-        ? { center: [37.85, 0.15], zoom: 5.3, pitch: 55, bearing: -14, duration: 1100 }
-        : { center: [37.7, 0.15], zoom: 5.45, pitch: 0, bearing: 0, duration: 900 });
+        ? { center: [37.85, 0.15], zoom: 5.3, pitch: 55, bearing: -14, duration: motionDuration(1100) }
+        : { center: [37.7, 0.15], zoom: 5.45, pitch: 0, bearing: 0, duration: motionDuration(900) });
   }
 
   // Update analysis view buttons
@@ -1277,6 +1468,9 @@ function updateAnalytics(filtered = getFilteredRecords()) {
   document.getElementById('overview-county').textContent = state.county === 'All counties' ? 'ALL' : state.county.toUpperCase();
   document.getElementById('depth-count').textContent = `${format(depths.length)} usable values`;
 
+  document.getElementById('depth-histogram').setAttribute('aria-label', `${format(depths.length)} visible sources have a usable recorded construction depth.`);
+  document.getElementById('update-chart').setAttribute('aria-label', `${format(years.reduce((sum, row) => sum + row.value, 0))} visible records have a usable last-update year.`);
+
   // Update bar lists
   renderBarList('type-bar-list', types, filtered.length);
   renderBarList('county-bar-list', topCounties, filtered.length);
@@ -1289,8 +1483,9 @@ function updateAnalytics(filtered = getFilteredRecords()) {
 // Render Bar List
 function renderBarList(containerId, rows, total) {
   const container = document.getElementById(containerId);
-  if (!rows.length) {
-    container.innerHTML = '<p style="padding: 10px; color: var(--dash-muted); font-size: 9px;">No data</p>';
+  container.classList.remove('loading-state');
+  if (!rows.length || total === 0) {
+    container.innerHTML = '<p class="empty-state">No records match these filters. Try clearing one.</p>';
     return;
   }
 
@@ -1307,8 +1502,9 @@ function renderBarList(containerId, rows, total) {
 // Render Depth Histogram
 function renderDepthHistogram(values) {
   const container = document.getElementById('depth-histogram');
+  container.classList.remove('loading-state');
   if (!values.length) {
-    container.innerHTML = '<p style="padding: 18px; color: var(--dash-muted); font-size: 9px;">No depth data</p>';
+    container.innerHTML = '<p class="empty-state">None of these records has a usable depth. Try clearing the depth filter or choosing another county.</p>';
     return;
   }
 
@@ -1332,8 +1528,9 @@ function renderDepthHistogram(values) {
 // Render Update Chart
 function renderUpdateChart(rows) {
   const container = document.getElementById('update-chart');
+  container.classList.remove('loading-state');
   if (!rows.length) {
-    container.innerHTML = '<p style="padding: 14px; color: var(--dash-muted); font-size: 9px;">No update data</p>';
+    container.innerHTML = '<p class="empty-state">These records do not have a usable update date. Try another selection.</p>';
     return;
   }
 
@@ -1354,7 +1551,7 @@ function updateTimelineUI() {
   document.getElementById('timeline-slider').min = min;
   document.getElementById('timeline-slider').max = max;
   document.getElementById('timeline-slider').value = state.timelineIndex ?? max;
-  document.getElementById('timeline-label').textContent = state.timelineIndex == null ? 'Select month' : formatMonthIndex(state.timelineIndex);
+  document.getElementById('timeline-label').textContent = state.timelineIndex == null ? 'Choose a month' : formatMonthIndex(state.timelineIndex);
 
   updateDashboardFilters();
   updateLegend();
@@ -1399,7 +1596,7 @@ function getLegendMarkup(mode) {
   if (mode === 'timeline') {
     return `
       <span><i style="background: ${TYPE_META.bh.color}"></i>Visible update records</span>
-      <span>${state.timelineMode === 'cumulative' ? 'Cumulative through' : 'Only'} ${state.timelineIndex == null ? 'selected month' : formatMonthIndex(state.timelineIndex)}</span>
+      <span>${state.timelineMode === 'cumulative' ? 'Running total through' : 'One month only:'} ${state.timelineIndex == null ? 'chosen month' : formatMonthIndex(state.timelineIndex)}</span>
       <span>Dates describe record updates, not drilling</span>
     `;
   }
@@ -1421,7 +1618,7 @@ function getLegendMarkup(mode) {
       <span><i style="background: #153a50"></i>Lower record density</span>
       <span><i style="background: #087ea8"></i>Medium record density</span>
       <span><i style="background: #f05b3f"></i>Highest record density</span>
-      <span>Density shows record concentration</span>
+      <span>More records, not more groundwater</span>
     `;
   }
   return Object.values(TYPE_META).map(meta =>
@@ -1463,6 +1660,7 @@ function resetFilters() {
   state.mapMode = 'density';
 
   document.getElementById('county-filter').value = 'All counties';
+  document.getElementById('example-county-select').value = '';
   document.querySelectorAll('#type-filters input').forEach(input => input.checked = true);
   document.getElementById('depth-only').checked = false;
 
@@ -1472,6 +1670,7 @@ function resetFilters() {
 // View Switching
 function switchView(view) {
   state.activeView = view;
+  document.body.classList.toggle('dashboard-open', view === 'dashboard');
 
   const storyView = document.getElementById('story-view');
   const dashboardView = document.getElementById('dashboard-view');
@@ -1496,6 +1695,9 @@ function switchView(view) {
     if (!state.dashboardMap) {
       initDashboard();
     } else {
+      document.getElementById('county-filter').value = state.county;
+      document.getElementById('example-county-select').value = state.county === 'All counties' ? '' : state.county;
+      document.getElementById('depth-only').checked = state.depthOnly;
       window.requestAnimationFrame(() => {
         state.dashboardMap.resize();
         updateDashboardMode();
@@ -1541,6 +1743,15 @@ function initApp() {
   brandButton.addEventListener('click', () => switchView('story'));
   navStory.addEventListener('click', () => switchView('story'));
   navDashboard.addEventListener('click', () => switchView('dashboard'));
+  document.getElementById('view-story-link')?.addEventListener('click', event => {
+    event.preventDefault();
+    const target = event.currentTarget.dataset.storyTarget || '#story-catch';
+    switchView('story');
+    window.setTimeout(() => document.querySelector(target)?.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' }), 0);
+  });
+
+  const citationDate = document.getElementById('citation-date');
+  if (citationDate) citationDate.textContent = new Intl.DateTimeFormat('en-KE', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date());
 
   // Keep one clean URL while the story and dashboard switch in place.
   if (window.location.hash) {
@@ -1554,89 +1765,18 @@ function initApp() {
 
 // Render Map Story Chapters
 function renderMapStoryChapters() {
-  const chapters = [
-    {
-      mode: 'density',
-      number: '01',
-      label: 'WHERE RECORDS GATHER',
-      title: 'The 2D hotspot map shows the survey footprint.',
-      shows: 'Bright areas contain many records close together. The strongest clusters are in Kakamega and Vihiga.',
-      meaning: 'The inventory is geographically uneven. Western Kenya is documented much more heavily, so quieter areas need more data collection before they can be compared fairly.',
-      caution: 'A hotspot means more records, not more groundwater, recharge or safe yield.'
-    },
-    {
-      mode: 'hexDensity',
-      number: '02',
-      label: 'COMPARE PLACES FAIRLY',
-      title: 'The 3D grid turns concentration into comparable cells.',
-      shows: 'Each equal-sized grid cell groups nearby records. Taller and brighter cells contain more entries.',
-      meaning: 'The 3D pattern confirms that a small part of western Kenya carries much of the national inventory. It helps identify where records are concentrated and where the inventory needs strengthening.',
-      caution: 'The column height is a display value. It is not metres of water.'
-    },
-    {
-      mode: 'hexDepth',
-      number: '03',
-      label: 'WHAT DEPTH DATA CAN SAY',
-      title: 'Only well-sampled cells become depth results.',
-      shows: 'Height and colour compare the median construction depth in cells with at least five usable measurements. Grey cells do not meet that minimum.',
-      meaning: 'Recorded construction depth varies from place to place, but only a small number of well-sampled cells support this comparison. These are local signals for further study, not a national depth model.',
-      caution: 'Construction depth is not the water-table depth, aquifer thickness or available water.'
-    },
-    {
-      mode: 'monitoringGap',
-      number: '04',
-      label: 'WHERE THE INVENTORY IS THIN',
-      title: 'Distance reveals places with little nearby information.',
-      shows: 'Taller, brighter cells are farther from the nearest mapped groundwater record.',
-      meaning: 'These cells point to priority areas for checking existing records and carrying out new inventory work. They reveal where our information is weakest, not where water is necessarily scarce.',
-      caution: 'A large gap is an information gap. It does not prove that groundwater is absent or scarce.'
-    },
-    {
-      mode: 'points',
-      number: '05',
-      label: 'THE SOURCES BEHIND THE PATTERN',
-      title: 'Every point is one entry in the public inventory.',
-      shows: 'Every dot is one public inventory entry. Colour separates boreholes, dug wells and springs.',
-      meaning: 'This is a starting list for matching sites with WRA permits, completion records and field observations. Dense and empty areas still reflect how the survey was carried out.',
-      caution: 'A point does not confirm ownership, operating condition, permit status or current water use.'
-    },
-    {
-      mode: 'depth',
-      number: '06',
-      label: 'THE SMALL DEPTH SAMPLE',
-      title: 'Only 552 records support the construction-depth map.',
-      shows: 'Colour and marker size compare the 552 records with usable construction depth. Their median construction depth is 75 metres.',
-      meaning: 'Usable depth evidence is rare and unevenly distributed. It can guide targeted local checks, but it is too limited to describe typical borehole depth across all of Kenya.',
-      caution: 'This small sample cannot describe depth conditions across the whole country.'
-    },
-    {
-      mode: 'coverage',
-      number: '07',
-      label: 'SEE THE MISSING VALUES',
-      title: 'The coverage map makes the depth gap impossible to miss.',
-      shows: 'Green records contain usable construction depth; muted red records do not. Only 2.6% of the inventory has a usable value.',
-      meaning: 'Missing depth is the clearest limitation in this dataset. Completing and verifying these records would greatly improve groundwater planning, drilling review and future monitoring.',
-      caution: 'Missing depth is not zero depth, a shallow source or evidence of non-compliance.'
-    },
-    {
-      mode: 'timeline',
-      number: '08',
-      label: 'WHEN RECORDS CHANGED',
-      title: 'The timeline follows data updates, not drilling.',
-      shows: 'The view groups records by the date their database entry was last updated. The controls can show one month or the cumulative record up to that month.',
-      meaning: 'Large peaks represent periods of database activity or bulk updates. They help assess how current the inventory may be, but they do not show when wells were drilled or began operating.',
-      caution: 'These are record-update dates. They are not construction, permit or abstraction start dates.'
-    },
-    {
-      mode: 'wells3d',
-      number: '09',
-      label: 'BELOW THE SURFACE',
-      title: 'Depth shafts place the small sample beneath 3D terrain.',
-      shows: 'Each coloured shaft starts at the terrain surface and extends downward using the recorded construction depth. Display scaling makes the shafts visible at national level.',
-      meaning: 'The view makes relative drilling depth easier to compare and highlights how small the usable sample is. It can guide record checks, but it does not reveal the shape or condition of an aquifer.',
-      caution: 'The shafts show relative construction depth, not groundwater level, aquifer shape or pumping capacity.'
-    }
-  ];
+  const chapterOrder = ['density', 'hexDensity', 'monitoringGap', 'points', 'hexDepth', 'depth', 'coverage', 'wells3d', 'timeline'];
+  const chapters = chapterOrder.map((mode, index) => ({
+    mode,
+    number: String(index + 1).padStart(2, '0'),
+    label: VIEW_GUIDE[mode].group.toUpperCase(),
+    title: VIEW_GUIDE[mode].title,
+    technical: ANALYSIS_VIEWS[mode][0],
+    shows: VIEW_GUIDE[mode].seeing,
+    question: VIEW_GUIDE[mode].question,
+    next: VIEW_GUIDE[mode].next,
+    caution: VIEW_GUIDE[mode].caution
+  }));
 
   const chapterImages = {
     density: ['docs/images/record-density.png', 'Dashboard showing the 2D groundwater record-density hotspot map'],
@@ -1657,13 +1797,15 @@ function renderMapStoryChapters() {
   const container = document.getElementById('map-story-chapters');
   container.innerHTML = chapters.map((chapter, index) => `
     <article class="map-story-chapter" data-chapter="${index}">
-      <div class="map-story-mobile-image"><img src="${chapter.image}" alt="" /></div>
+      <div class="map-story-mobile-image"><img src="${chapter.image}" alt="${chapter.alt}" /></div>
       <span class="map-story-number">${chapter.number}</span>
       <p class="section-label">${chapter.label}</p>
       <h3>${chapter.title}</h3>
-      <p class="map-story-explanation"><b>What the map shows:</b> ${chapter.shows}</p>
-      <p class="map-story-meaning"><b>What the pattern means:</b> ${chapter.meaning}</p>
-      <p class="map-story-caution"><b>Read with care:</b> ${chapter.caution}</p>
+      <p class="technical-subtitle">Technical view: ${chapter.technical}</p>
+      <p class="map-story-explanation"><b>What you are seeing:</b> ${chapter.shows}</p>
+      <p class="map-story-meaning"><b>Question it raises:</b> ${chapter.question}</p>
+      <p class="map-story-next"><b>What to check next:</b> ${chapter.next}</p>
+      <p class="map-story-caution"><b>What it does NOT mean:</b> ${chapter.caution}</p>
       <button type="button" data-mode="${chapter.mode}">Open this live map →</button>
     </article>
   `).join('');
@@ -1677,7 +1819,7 @@ function renderMapStoryChapters() {
         <img src="${chapter.image}" alt="${chapter.alt}" />
         <div class="map-story-screen-label"><span>${chapter.number} / ${String(chapters.length).padStart(2, '0')}</span><b>${chapter.label}</b></div>
       </div>
-      <figcaption><span>Notebook outputs · Analysis view</span><b>${chapter.title}</b></figcaption>
+      <figcaption><span>${chapter.label}</span><b>${chapter.title} · ${chapter.technical}</b></figcaption>
       <div class="map-story-progress" aria-label="Map ${index + 1} of ${chapters.length}">
         ${chapters.map((_, itemIndex) => `<i class="${itemIndex === index ? 'is-active' : ''}"></i>`).join('')}
       </div>
