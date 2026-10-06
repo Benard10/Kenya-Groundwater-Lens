@@ -18,6 +18,9 @@ qa-*.html
 # Reproducible standalone notebook exports (kept locally, not published)
 gw_*.html
 
+# Local GADM boundary source used only when regenerating notebook surfaces
+gadm36_KEN_1.*
+
 # Generated GitHub Pages bundle
 groundwater-story-map/dist/
 

@@ -222,7 +222,7 @@ This part explains how the notebook turns the source file into the results used 
 - `kenya_groundwater_mwater_migrated.csv` — retained source-stage groundwater data.
 - `groundwater_cleaned.csv` — cleaned records used by the upgraded notebook and web-data scripts.
 - `Underground_analysis.ipynb` — notebook that creates and explains the spatial analyses.
-- `gadm36_KEN_1.*` — Kenya county boundary files.
+- `gadm36_KEN_1.*` — local Kenya county-boundary input used when regenerating the national surfaces. These shapefile components are intentionally excluded from Git.
 
 ### Step 1 — Read and check the records
 
@@ -381,7 +381,7 @@ Ground Water Analysis/
 ├── Underground_analysis.ipynb
 ├── groundwater_cleaned.csv
 ├── kenya_groundwater_mwater_migrated.csv
-├── gadm36_KEN_1.*
+├── gadm36_KEN_1.*                # Local analysis input; ignored by Git
 ├── gw_*.html                     # Generated locally; ignored by Git
 └── groundwater-story-map/
     ├── index.html                 # Main story and dashboard document
