@@ -1750,9 +1750,6 @@ function initApp() {
     window.setTimeout(() => document.querySelector(target)?.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' }), 0);
   });
 
-  const citationDate = document.getElementById('citation-date');
-  if (citationDate) citationDate.textContent = new Intl.DateTimeFormat('en-KE', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date());
-
   // Keep one clean URL while the story and dashboard switch in place.
   if (window.location.hash) {
     window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
